@@ -1,0 +1,122 @@
+import java.io.*;
+import java.util.*;
+
+
+public class WebFileUpdate {
+
+    public void askForInfo() {
+        boolean valid = false;
+        int totalVisit = 0;
+        Scanner in = new Scanner(System.in);
+
+        System.out.println(" Input a valid number ");
+   
+        for (;;) {
+            if (!in.hasNextInt()) {
+                System.out.println("Invalid input!");
+                System.out.print("Enter an integer: ");
+                in.next();
+                continue;
+            }
+        }
+    }
+
+    // This method returns true if an it finds a match in the Current Reservation File
+    
+    public boolean checkAndUpdate( String accountNumber) {
+        accountNumber = "13";
+        String customerInfoLine = DeleteAccountWeb2(accountNumber);
+        //updating to another file
+        AddAccountWeb2(customerInfoLine);
+        if (customerInfoLine.equals("")) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    // Add and delete account
+    public String DeleteAccountWeb2(String customerAcNum) {
+        boolean match = false;
+        String customerInfoLine = "";
+        try {
+
+            String tempDoc = "";
+            String myLine = "";
+            String fileAcNo = "";
+            int fileAccountNo = 0;
+            FileReader myFile = new FileReader("web-receive.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+                myLine = scanMyFile.nextLine();
+                Scanner scanMyLine = new Scanner(myLine);
+                fileAcNo = scanMyLine.next();
+
+                if (fileAcNo.equals(customerAcNum)) {
+                    tempDoc = tempDoc + "";
+                    match = true;
+                    System.out.println(" match was found ");
+                    customerInfoLine = myLine;
+                } else {
+                    tempDoc = tempDoc + myLine + "\n";
+                    System.out.println(" in");
+                }
+            }
+
+            myFile.close();
+            System.out.println("-------------------------------------" + "\n" + " Fineal tempDoc " + "\n" + tempDoc);
+            File outFile = new File("web-receive.txt");
+            PrintWriter output = new PrintWriter(outFile);
+            output.println(tempDoc);
+            output.close();
+            tempDoc = "";
+        } catch (Exception ex) {
+            System.out.println("\n  " + ex);
+        }
+
+        if (match) {
+            System.out.println(customerAcNum + " is successfully deleted !");
+        } else {
+            System.out.println(" Sorry !" + " the information was not deleted from the file ");
+        }
+        return customerInfoLine;
+    }
+
+    public void AddAccountWeb2(String customerInfoLine) {
+
+        try {
+            boolean match = true;
+            String tempDoc = "";
+            String myLine = "";
+            String totalVisitString = "";
+            String fileAcNo = "";
+            int fileAccountNo = 0;
+
+            int wordCounter = 0;
+            FileReader myFile = new FileReader("final1.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+                myLine = scanMyFile.nextLine();
+                System.out.println(" Currently Processing myLine " + myLine);
+                Scanner scanMyLine = new Scanner(myLine);
+                tempDoc = tempDoc + myLine + "\n";
+            }
+
+            tempDoc = tempDoc + customerInfoLine;
+
+            myFile.close();
+            System.out.println("-------------------------------------" + "\n" + " Fineal tempDoc " + "\n" + tempDoc);
+            File outFile = new File("final1.txt");
+            PrintWriter output = new PrintWriter(outFile);
+            output.println(tempDoc);
+            output.close();
+            tempDoc = "";
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+}
+
