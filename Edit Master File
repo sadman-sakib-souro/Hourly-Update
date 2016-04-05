@@ -1,0 +1,133 @@
+import java.io.*;
+import java.util.*;
+
+/**
+ *
+ * @author Admin
+ */
+public class WriteStuff_2 {
+
+    public void sendParameter() {
+       // AddAccount("1111", "Adam", "levine", "March", "13", "2016", "1");
+        searchInfo("1111");
+    }
+
+    public void DeleteAccount(String customerAcNum) {
+        boolean match = false;
+        try {
+
+            String tempDoc = "";
+            String myLine = "";
+            String fileAcNo = "";
+            int fileAccountNo = 0;
+            FileReader myFile = new FileReader("input-master.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+                myLine = scanMyFile.nextLine();
+                Scanner scanMyLine = new Scanner(myLine);
+                fileAcNo = scanMyLine.next();
+
+                if (fileAcNo.equals(customerAcNum)) {
+                    tempDoc = tempDoc + "";
+                    match = true;
+                    System.out.println(" match was found ");
+                } else {
+                    tempDoc = tempDoc + myLine + "\n";
+                    System.out.println(" in");
+                }
+            }
+
+            myFile.close();
+            System.out.println("-------------------------------------" + "\n" + " Fineal tempDoc " + "\n" + tempDoc);
+            File outFile = new File("input-master.txt");
+            PrintWriter output = new PrintWriter(outFile);
+            output.println(tempDoc);
+            output.close();
+            tempDoc = "";
+        } catch (Exception ex) {
+            System.out.println("\n  " + ex);
+        }
+
+        if (match) {
+            System.out.println(customerAcNum + " is successfully deleted !");
+        } else {
+            System.out.println(" Sorry !" + " the information was not added to the file ");
+        }
+
+    }
+
+    public void AddAccount(String customerAcNum, String fName, String lName, String mm, String dd, String yr, String totalVisit) {
+
+        try {
+            boolean match = true;
+            String tempDoc = "";
+            String myLine = "";
+            String totalVisitString = "";
+            String fileAcNo = "";
+            int fileAccountNo = 0;
+
+            int wordCounter = 0;
+            FileReader myFile = new FileReader("input-master.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+                myLine = scanMyFile.nextLine();
+                System.out.println(" Currently Processing myLine " + myLine);
+                Scanner scanMyLine = new Scanner(myLine);
+                fileAcNo = scanMyLine.next();
+                System.out.println(" customerAcNum :" + customerAcNum);
+
+                if (fileAcNo.equals(customerAcNum)) {
+                    match = false;
+                    System.out.println(" Match was found ");
+                    tempDoc = tempDoc + myLine + "\n";
+                } else {
+                    tempDoc = tempDoc + myLine + "\n";
+                }
+            }
+
+            if (match) {
+                tempDoc = tempDoc + customerAcNum + " " + fName + " " + lName + " " + mm + " " + dd + " " + yr + " " + totalVisit;
+            } else {
+                System.out.println(" Sorry ! The account number is already existing in the file ");
+            }
+            myFile.close();
+            System.out.println("-------------------------------------" + "\n" + " Fineal tempDoc " + "\n" + tempDoc);
+            File outFile = new File("input-master.txt");
+            PrintWriter output = new PrintWriter(outFile);
+            output.println(tempDoc);
+            output.close();
+            tempDoc = "";
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public void searchInfo(String customerAcNum) {
+        try {
+            boolean match = true;
+            String myLine = "";
+            String fileAcNo = "";
+            FileReader myFile = new FileReader("input-master.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+                myLine = scanMyFile.nextLine();
+                Scanner scanMyLine = new Scanner(myLine);
+                fileAcNo = scanMyLine.next();
+
+                if (fileAcNo.equals(customerAcNum)) {
+                    System.out.println(" Here is the customer Info you are looking for :" + "\n" + myLine);
+                    match = false;
+                }
+            }
+            myFile.close();
+            if (match) {
+                System.out.println(" Sorry ! Could not find account. ");
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+    }
+}
