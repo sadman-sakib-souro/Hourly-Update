@@ -1,0 +1,128 @@
+
+import java.io.*;
+import java.util.*;
+
+/**
+ *
+ * @author Sadman
+ */
+public class WriteStuff {
+
+    // Reads customer information from a file and calls "updater"- method 
+    
+    public void fileReader() {
+
+        try {
+            String tempDoc = "";
+            String myLine = "";
+            String totalVisitString = "";
+            String fileAcNo = "";
+            int fileAccountNo = 0;
+            int totalVisit = 0;
+            int wordCounter = 0;
+            FileReader myFile = new FileReader("input-web.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+                myLine = scanMyFile.nextLine();
+                System.out.println(" Currently Processing myLine " + myLine);
+                Scanner scanMyLine = new Scanner(myLine);
+                String[] tokens = myLine.split(" ");
+
+                updater(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4], tokens[5]);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("\n" + ex);
+        }
+    }
+// Update information in the Master File
+
+    public void updater(String customerAcNum, String fName, String lName, String mm, String dd, String yr) {
+
+        try {
+            int internalSearchCount = 0;
+            int totalLine = totalLineCount();
+            String tempDoc = "";
+            String myLine = "";
+            String totalVisitString = "";
+            String fileAcNo = "";
+            int fileAccountNo = 0;
+            int totalVisit = 0;
+            int wordCounter = 0;
+            FileReader myFile = new FileReader("input-master.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+                myLine = scanMyFile.nextLine();
+                System.out.println(" Currently Processing myLine " + myLine);
+                Scanner scanMyLine = new Scanner(myLine);
+                fileAcNo = scanMyLine.next();
+                System.out.println(" customerAcNum :" + customerAcNum);
+
+                if (fileAcNo.equals(customerAcNum)) {
+                    System.out.println(" MATCH   FOUND ");
+                    tempDoc = tempDoc + customerAcNum + " " + fName + " " + lName + " " + mm + " " + dd + " " + yr;
+                    System.out.println(" tempDoc before while loop " + tempDoc);
+                    System.out.println(" Entering while loop and displaying the changing values of word counter and "
+                            + "\n displaying values of totalVistString  ");
+
+                    while (wordCounter < 6) {
+                        totalVisitString = scanMyLine.next();
+                        wordCounter++;
+                        System.out.print(" " + wordCounter + " " + totalVisitString + "  ");
+                    }
+
+                    totalVisit = Integer.parseInt(totalVisitString);
+                    totalVisit++;
+                    System.out.println("\n" + " Total visit before " + totalVisitString + " and after " + totalVisit);
+                    tempDoc = tempDoc + " " + totalVisit + "\n";
+                    System.out.println("-------------------------------------" + "\n" + " tempDoc " + "\n" + tempDoc);
+
+                } else {
+                    System.out.println(" Match did not found ");
+                    // tempDoc = tempDoc + customerAcNum + fName + lName + mm + dd + yr + " 1"; 
+                    tempDoc = tempDoc + myLine + "\n";
+                    internalSearchCount++;
+
+                }
+            }
+
+            if (internalSearchCount == totalLine) {
+                tempDoc = tempDoc + customerAcNum + " " + fName + " " + lName + " " + mm + " " + dd + " " + yr + " 1";
+            }
+
+            myFile.close();
+            System.out.println("-------------------------------------" + "\n" + " Fineal tempDoc " + "\n" + tempDoc);
+            File outFile = new File("input-master.txt");
+            PrintWriter output = new PrintWriter(outFile);
+            output.println(tempDoc);
+            output.close();
+            tempDoc = "";
+        } catch (Exception ex) {
+            System.out.println("\n  " + ex);
+        }
+
+    }
+
+    // An auxilary method for updater method. This totalLineCount method returns the 
+    // total number of line of a file.
+    
+    public int totalLineCount() {
+        int counter = 0;
+        try {
+            FileReader myFile = new FileReader("input-master.txt");
+            Scanner scanMyFile = new Scanner(myFile);
+
+            while (scanMyFile.hasNext()) {
+
+                counter++;
+                scanMyFile.nextLine();
+            }
+        } catch (Exception ex) {
+            System.out.println("\n" + ex);
+        }
+        return counter;
+    }
+
+}
